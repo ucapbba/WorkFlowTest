@@ -1,0 +1,42 @@
+
+# .github/workflows/on-demand-script.yml
+name: On-demand deploy/copy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        type: choice
+        options: [dev, uat, prod]
+        required: true
+      artifact_path:
+        description: "Path or URL to artifact"
+        type: string
+        required: true
+      target_host:
+        description: "Target VM (hostname or IP)"
+        type: string
+        required: true
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (optional)
+        uses: actions/checkout@v4
+
+      - name: Print inputs
+        run: |
+          echo "env=${{ github.event.inputs.environment }}"
+          echo "artifact=${{ github.event.inputs.artifact_path }}"
+          echo "target=${{ github.event.inputs.target_host }}"
+
+      # Example: run your script
+      - name: Execute deployment script
+        shell: bash
+        run: |
+          ./scripts/deploy.sh \
+            --env "${{ github.event.inputs.environment }}" \
+            --artifact "${{ github.event.inputs.artifact_path }}" \
+            --host "${{ github.event.inputs.target_host }}"
