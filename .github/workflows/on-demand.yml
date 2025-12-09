@@ -32,6 +32,10 @@ jobs:
           echo "artifact=${{ github.event.inputs.artifact_path }}"
           echo "target=${{ github.event.inputs.target_host }}"
 
+      
+      - name: Make script executable
+        run: chmod +x ./scripts/deploy.sh
+
       # Example: run your script
       - name: Execute deployment script
         shell: bash
